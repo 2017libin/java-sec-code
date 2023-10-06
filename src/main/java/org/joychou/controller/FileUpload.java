@@ -1,6 +1,7 @@
 package org.joychou.controller;
 
 import com.fasterxml.uuid.Generators;
+import org.joychou.security.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,8 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-
-import org.joychou.security.SecurityUtil;
 
 
 /**
@@ -59,7 +58,10 @@ public class FileUpload {
         try {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            String realPath = UPLOADED_FOLDER + file.getOriginalFilename();
+            System.out.println(realPath);
+
+            Path path = Paths.get(realPath);
             Files.write(path, bytes);
 
             redirectAttributes.addFlashAttribute("message",
@@ -86,7 +88,7 @@ public class FileUpload {
             return "Please select a file to upload";
         }
 
-        String fileName = multifile.getOriginalFilename();
+        String fileName = multifile.getOriginalFilename();  // 获取文件名
         String Suffix = fileName.substring(fileName.lastIndexOf(".")); // 获取文件后缀名
         String mimeType = multifile.getContentType(); // 获取MIME类型
         String filePath = UPLOADED_FOLDER + fileName;
